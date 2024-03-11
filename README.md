@@ -1,6 +1,5 @@
 <p align="center">
-<img src="https://github.com/vdaburon/har-convertor-jmeter-plugin/blob/main/doc/har_convertor_logo.png" alt="har convertor jmeter plugin logo"/>
-
+<img src="https://github.com/vdaburon/har-convertor-jmeter-plugin/blob/main/doc/har_convertor_tool_logo.png" alt="har convertor jmeter plugin logo"/>
   <p align="center">Convert a HAR file to a JMeter script and a Record XML file.</p>
   <p align="center"><a href="https://github.com/vdaburon/har-convertor-jmeter-plugin">Link to github project har-convertor-jmeter-plugin</a></p>
 </p>
