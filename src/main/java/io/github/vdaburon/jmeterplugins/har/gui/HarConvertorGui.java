@@ -58,6 +58,8 @@ public class HarConvertorGui extends AbstractAction implements
     private JTextField fileJmxOutTextField;
     private JTextField fileRecordOutTextField;
     private JTextField pauseBetweenUrlTextField;
+    private JTextField pageStartNumberTextField;
+    private JTextField samplerStartNumberTextField;
     private JButton fileHarInFileButton;
     private JTextField regexFilterIncludeField;
     private JTextField regexFilterExcludeField;
@@ -183,6 +185,34 @@ public class HarConvertorGui extends AbstractAction implements
                 }
             }
 
+            String sPageStartNumber = pageStartNumberTextField.getText();
+            int pageStartNumber = 1;
+            if (!sPageStartNumber.isEmpty()) {
+                try {
+                    pageStartNumber = Integer.parseInt(sPageStartNumber);
+                } catch (Exception ex) {
+                    log.warn("Error parsing int parameter " + ", value = " + sPageStartNumber + ", set to 1");
+                    pageStartNumber = 1;
+                }
+            }
+            if (pageStartNumber <= 0) {
+                pageStartNumber  = 1;
+            }
+
+            String sSamplerStartNumber = samplerStartNumberTextField.getText();
+            int samplerStartNumber = 1;
+            if (!sSamplerStartNumber.isEmpty()) {
+                try {
+                    samplerStartNumber = Integer.parseInt(sSamplerStartNumber);
+                } catch (Exception ex) {
+                    log.warn("Error parsing int parameter " + ", value = " + sSamplerStartNumber + ", set to 1");
+                    samplerStartNumber = 1;
+                }
+            }
+            if (samplerStartNumber <= 0) {
+                samplerStartNumber  = 1;
+            }
+
             boolean isRemoveCookieHeader = isRemoveCookieCheckbox.isSelected();
             boolean isRemoveCacheRequestHeader = isRemoveCacheRequestHeaderCheckbox.isSelected();
 
@@ -199,10 +229,11 @@ public class HarConvertorGui extends AbstractAction implements
                 log.info("regexFilterInclude=<" + regexFilterInclude + ">");
                 log.info("regexFilterExclude=<" + regexFilterExclude + ">");
                 log.info("isRemoveCookieHeader=<" + isRemoveCookieHeader + ">");
-                log.info("isRemoveCacheRequestHeader=<" + isRemoveCacheRequestHeader + ">");
+                log.info("samplerStartNumber=<" + samplerStartNumber + ">");
+                log.info("samplerStartNumber=<" + samplerStartNumber + ">");
                 log.info("****************************************");
 
-                HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader, regexFilterInclude, regexFilterExclude, recordXmlOut);
+                HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader, regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber);
 
                 log.info("After HarForJMeter.generateJmxAndRecord");
                 btConvert.setEnabled(true);
@@ -269,8 +300,20 @@ public class HarConvertorGui extends AbstractAction implements
         JLabel pauseBetweenUrlLabel = new JLabel("(Optional) Time (ms) between 2 URLs to create a new page (Transaction Controller)");
         pauseBetweenUrlTextField = new JTextField("5000", 80);
 
+        JLabel pageStartNumberLabel = new JLabel("(Optional) Page start number usually for partial recording (default 1)");
+        pageStartNumberTextField = new JTextField("", 80);
+
+        JLabel samplerStartNumberLabel = new JLabel("(Optional) Sampler start number usually for partial recording (default 1)");
+        samplerStartNumberTextField = new JTextField("", 80);
+
         panel.add(pauseBetweenUrlLabel);
         panel.add(pauseBetweenUrlTextField);
+
+        panel.add(pageStartNumberLabel);
+        panel.add(pageStartNumberTextField);
+
+        panel.add(samplerStartNumberLabel);
+        panel.add(samplerStartNumberTextField);
 
         panel.add(regexFilterIncludeLabel);
         panel.add(regexFilterIncludeField);
