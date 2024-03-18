@@ -26,6 +26,8 @@ import org.apache.jmeter.gui.action.AbstractAction;
 import org.apache.jmeter.gui.plugin.MenuCreator;
 import org.apache.jmeter.gui.util.EscapeDialog;
 import org.apache.jmeter.gui.util.VerticalPanel;
+import org.apache.jmeter.save.SaveService;
+import org.apache.jorphan.collections.HashTree;
 import org.apache.jorphan.gui.ComponentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +52,7 @@ public class HarConvertorGui extends AbstractAction implements
     private static final String BROWSE_JMX_OUT = "BROWSE_JMX_OUT";
     private static final String BROWSE_RECORD_OUT = "BROWSE_RECORD_OUT";
     private static final String ACTION_CONVERT = "ACTION_CONVERT";
+    private static final String ACTION_CONVERT_AND_LOAD_SCRIPT = "ACTION_CONVERT_LOAD";
     private static final String ACTION_MENU_TOOL = "ACTION_MENU_TOOL"; 
 
     private EscapeDialog messageDialog;
@@ -70,6 +73,7 @@ public class HarConvertorGui extends AbstractAction implements
     private JCheckBox isRemoveCacheRequestHeaderCheckbox;
 
     private JButton btConvert;
+    private JButton btConvertAndLoad;
     private String lastJFCDirectory;
     private JTextField labelStatus;
 
@@ -148,7 +152,7 @@ public class HarConvertorGui extends AbstractAction implements
 			}
         }
         
-        if (command.equals(ACTION_CONVERT)) {
+        if (command.equals(ACTION_CONVERT) || command.equals(ACTION_CONVERT_AND_LOAD_SCRIPT)) {
             String fileHarIn= fileHarInTextField.getText();
             
             File fFileIn = new File(fileHarIn);
@@ -243,10 +247,17 @@ public class HarConvertorGui extends AbstractAction implements
                     labelStatus.setText("Tool HAR Convertor Finished OK, fileJmxOut=" + fileJmxOut);
                 }
      	 		labelStatus.setForeground(java.awt.Color.BLACK);
+
+                if (command.equals(ACTION_CONVERT_AND_LOAD_SCRIPT)) {
+                    // open the script generated in current JMeter
+                    final HashTree tree = SaveService.loadTree(new File(fileJmxOut));
+                    org.apache.jmeter.gui.action.Load.insertLoadedTree(1,tree);
+                }
              } catch (Exception e) {
                 e.printStackTrace();
                 except = e;
                 btConvert.setEnabled(true);
+                btConvertAndLoad.setEnabled(true);
                 labelStatus.setText("Tool HAR Convertor Finished KO, exception = " + e);
                 labelStatus.setForeground(java.awt.Color.RED);
             }
@@ -255,6 +266,7 @@ public class HarConvertorGui extends AbstractAction implements
                  btConvert.setEnabled(true);
             }
         }
+
         if (command.equals(BROWSE_HAR_IN)) {
         	fileHarInTextField.setText(showFileChooser(fileHarInTextField.getParent(),
                     fileHarInTextField, false, new String[] { ".har" }));
@@ -283,7 +295,13 @@ public class HarConvertorGui extends AbstractAction implements
     	btConvert.setActionCommand(ACTION_CONVERT);
     	btConvert.setEnabled(true);
 
+        btConvertAndLoad = new JButton("CONVERT AND LOAD GENERATED SCRIPT");
+        btConvertAndLoad.addActionListener(this);
+        btConvertAndLoad.setActionCommand(ACTION_CONVERT_AND_LOAD_SCRIPT);
+        btConvertAndLoad.setEnabled(true);
+
         JPanel panel = new JPanel();
+        panel.add(btConvertAndLoad);
         panel.add(btConvert);
         return panel;
     }
@@ -388,7 +406,7 @@ public class HarConvertorGui extends AbstractAction implements
      * @param locationTextField
      *            the textField that will receive the path
      * @param onlyDirectory
-     *            whether or not the file chooser will only display directories
+     *            whether or not the file chooser will only display directories or Files only
      * @param extensions File extensions to filter
      * @return the path the user selected or, if the user cancelled the file
      *         chooser, the previous path
@@ -398,7 +416,7 @@ public class HarConvertorGui extends AbstractAction implements
         if (onlyDirectory) {
             jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         } else {
-            jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         }
         if(extensions != null && extensions.length > 0) {
             JMeterFileFilter currentFilter = new JMeterFileFilter(extensions);

@@ -49,6 +49,9 @@ e.g. : Status Results **KO**
 * Tool HAR Convertor Finished KO, exception = java.util.regex.PatternSyntaxException: Unmatched closing ')' near index 2  (.))
 * Tool HAR Convertor Finished KO, exception = net.sf.saxon.trans.XPathException: Failed to create output file file:/c:/toto.jmx
 
+### Action buttons
+* "CONVERT AND LOAD GENERATED SCRIPT", generates the JMeter script and record.xml file if set, next if no error LOAD the generated script in the current JMeter.
+* "CONVERT", generates the JMeter script and record.xml file if set.
 
 ## Creating a har file and run the tool har-to-jmx-convertor to simulate recording from the JMeter recording template
 This tool har-to-jmx-convertor try to **simulate** a script JMeter and a record xml file recording from the **JMeter Recording Template**.
@@ -131,9 +134,11 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>har-convertor-jmeter-plugin</artifactId>
-<version>2.0</version>
+<version>3.0</version>
 ```
 ## Versions
+Version 3.0 date 2024-03-18, Add Load generated script if no error. File Chooser select only file and no directory.
+
 Version 2.0 date 2024-03-12, for POST multipart/form-data don't put the content of the file in the Record.xml file because binary content could be large and not XML compatible. Add parameters : page_start_number and sampler_start_number to facilitate partial recording of website navigation.
 
 Version 1.0 date 2024-03-11, First Release.
