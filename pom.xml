@@ -6,7 +6,7 @@
 
     <groupId>io.github.vdaburon</groupId>
     <artifactId>har-convertor-jmeter-plugin</artifactId>
-    <version>3.1</version>
+    <version>3.2</version>
     <packaging>jar</packaging>
 
     <name>Apache JMeter Plugin to convert a HAR file to a JMeter script and Record XML</name>
@@ -74,7 +74,7 @@
         <dependency>
             <groupId>io.github.vdaburon</groupId>
             <artifactId>har-to-jmeter-convertor</artifactId>
-            <version>2.2</version>
+            <version>2.3</version>
         </dependency>
     </dependencies>
 

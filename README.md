@@ -134,9 +134,11 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>har-convertor-jmeter-plugin</artifactId>
-<version>3.1</version>
+<version>3.2</version>
 ```
 ## Versions
+Version 3.2 date 2024-03-30, Use library har-to-jmeter-convertor-2.2.jar, this version encode value for x-www-form-urlencoded when value contains space ' ' or equal '=' or slash '/' or plus '+' characters. Correct add the content for body data for POST, PUT or PATCH if not x-www-form-urlencoded in the Record.xml file.
+
 Version 3.1 date 2024-03-29, Use library har-to-jmeter-convertor-2.2.jar, this version remove the header 'Content-length' because the length is computed by JMeter when the request is created. POST or PUT could have query string and body with content so add query string to the path. Set Content Encoding to UFT-8 for POST or PUT method and request Content-Type : application/json. Add body data content in record.xml for PUT and PATCH methods.
 
 Version 3.0 date 2024-03-18, Add Load generated script if no error. File Chooser select only file and no directory.
