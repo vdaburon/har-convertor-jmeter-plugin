@@ -6,6 +6,8 @@
 
 # Convert a HAR file to a JMeter script and a Record XML file.
 
+An article about motivations to create this tool: https://dzone.com/articles/convert-a-har-file-to-jmeter-script
+
 ## GUI interface in the JMeter Tools Menu
 This tool is present in the Menu Tools > vdn@github - HAR Convertor Tool
 
