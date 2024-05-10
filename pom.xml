@@ -6,7 +6,7 @@
 
     <groupId>io.github.vdaburon</groupId>
     <artifactId>har-convertor-jmeter-plugin</artifactId>
-    <version>3.2</version>
+    <version>5.0</version>
     <packaging>jar</packaging>
 
     <name>Apache JMeter Plugin to convert a HAR file to a JMeter script and Record XML</name>
@@ -70,11 +70,18 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- This JMeter Plugin use mainly this tool -->
         <dependency>
             <groupId>io.github.vdaburon</groupId>
             <artifactId>har-to-jmeter-convertor</artifactId>
-            <version>2.3</version>
+            <version>5.0</version>
         </dependency>
     </dependencies>
 
@@ -83,7 +90,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.12.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
@@ -106,7 +113,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -120,7 +127,7 @@
                 <!-- create the uber jar : mvn clean package -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.7.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

@@ -51,6 +51,7 @@ public class HarConvertorGui extends AbstractAction implements
     private static final String BROWSE_HAR_IN = "BROWSE_HAR_IN";
     private static final String BROWSE_JMX_OUT = "BROWSE_JMX_OUT";
     private static final String BROWSE_RECORD_OUT = "BROWSE_RECORD_OUT";
+    private static final String BROWSE_EXTERNAL_FILE_IN = "BROWSE_EXTERNAL_FILE_IN";
     private static final String ACTION_CONVERT = "ACTION_CONVERT";
     private static final String ACTION_CONVERT_AND_LOAD_SCRIPT = "ACTION_CONVERT_LOAD";
     private static final String ACTION_MENU_TOOL = "ACTION_MENU_TOOL"; 
@@ -60,6 +61,7 @@ public class HarConvertorGui extends AbstractAction implements
     private JTextField fileHarInTextField;
     private JTextField fileJmxOutTextField;
     private JTextField fileRecordOutTextField;
+    private JTextField externalFileInfoInField;
     private JTextField pauseBetweenUrlTextField;
     private JTextField pageStartNumberTextField;
     private JTextField samplerStartNumberTextField;
@@ -68,9 +70,11 @@ public class HarConvertorGui extends AbstractAction implements
     private JTextField regexFilterExcludeField;
     private JButton fileJmxOutFileButton;
     private JButton fileRecordOutFileButton;
+    private JButton externalFileInfoInButton;
     private JCheckBox isAddPauseCheckbox;
     private JCheckBox isRemoveCookieCheckbox;
     private JCheckBox isRemoveCacheRequestHeaderCheckbox;
+    private JCheckBox isUseLrwrTransactionNameCheckbox;
 
     private JButton btConvert;
     private JButton btConvertAndLoad;
@@ -161,6 +165,17 @@ public class HarConvertorGui extends AbstractAction implements
             	labelStatus.setForeground(java.awt.Color.RED);
             	return;
             }
+
+            String externalFileInfoIn= externalFileInfoInField.getText();
+            if (!externalFileInfoIn.isEmpty()) {
+                File fExternalFileInfoIn = new File(externalFileInfoIn);
+                if (!fExternalFileInfoIn.canRead()) {
+                    labelStatus.setText("Tool HAR Convertor Finished KO, CAN'T READ CSV externalFileInfoIn = " + externalFileInfoIn);
+                    labelStatus.setForeground(java.awt.Color.RED);
+                    return;
+                }
+            }
+
             String fileJmxOut= fileJmxOutTextField.getText();
             String recordXmlOut= fileRecordOutTextField.getText();
             String regexFilterInclude= regexFilterIncludeField.getText();
@@ -219,6 +234,12 @@ public class HarConvertorGui extends AbstractAction implements
 
             boolean isRemoveCookieHeader = isRemoveCookieCheckbox.isSelected();
             boolean isRemoveCacheRequestHeader = isRemoveCacheRequestHeaderCheckbox.isSelected();
+            boolean isUseLrwrTransactionName = isUseLrwrTransactionNameCheckbox.isSelected();
+
+            String lrwr_info = "";
+            if (isUseLrwrTransactionName) {
+                lrwr_info = HarForJMeter.K_LRWR_USE_TRANSACTION_NAME;
+            }
 
             try {
             	btConvert.setEnabled(false);
@@ -235,9 +256,11 @@ public class HarConvertorGui extends AbstractAction implements
                 log.info("isRemoveCookieHeader=<" + isRemoveCookieHeader + ">");
                 log.info("samplerStartNumber=<" + samplerStartNumber + ">");
                 log.info("samplerStartNumber=<" + samplerStartNumber + ">");
+                log.info("lrwr_info=<" + lrwr_info + ">");
+                log.info("externalFileInfoIn=<" + externalFileInfoIn + ">");
                 log.info("****************************************");
 
-                HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader, regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber);
+                HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader, regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber, lrwr_info, externalFileInfoIn);
 
                 log.info("After HarForJMeter.generateJmxAndRecord");
                 btConvert.setEnabled(true);
@@ -284,6 +307,13 @@ public class HarConvertorGui extends AbstractAction implements
         if (command.equals(BROWSE_RECORD_OUT)) {
             fileRecordOutTextField.setText(showFileChooser(fileRecordOutTextField.getParent(),
                     fileRecordOutTextField, false, new String[] { ".xml" }));
+            labelStatus.setText("Waiting configuration ... ");
+            labelStatus.setForeground(java.awt.Color.BLACK);
+        }
+
+        if (command.equals(BROWSE_EXTERNAL_FILE_IN)) {
+            externalFileInfoInField.setText(showFileChooser(externalFileInfoInField.getParent(),
+                    externalFileInfoInField, false, new String[] { ".csv" }));
             labelStatus.setText("Waiting configuration ... ");
             labelStatus.setForeground(java.awt.Color.BLACK);
         }
@@ -353,6 +383,9 @@ public class HarConvertorGui extends AbstractAction implements
         JLabel isRemoveCacheHeaderLabel = new JLabel("(Optional) Remove cache header in the http request (default true because add a Cache Manager)");
         isRemoveCacheRequestHeaderCheckbox= new JCheckBox("",true);
 
+        JLabel isUseLrwrTransactionNameLabel = new JLabel("(Optional) HAR was generated with LoadRunner Web Recorder and Transaction Names (default false)");
+        isUseLrwrTransactionNameCheckbox= new JCheckBox("",false);
+
         panel.add(isAddPauseLabel);
         panel.add(isAddPauseCheckbox);
 
@@ -361,6 +394,9 @@ public class HarConvertorGui extends AbstractAction implements
 
         panel.add(isRemoveCacheHeaderLabel);
         panel.add(isRemoveCacheRequestHeaderCheckbox);
+
+        panel.add(isUseLrwrTransactionNameLabel);
+        panel.add(isUseLrwrTransactionNameCheckbox);
 
         return panel;
     }
@@ -396,6 +432,15 @@ public class HarConvertorGui extends AbstractAction implements
         fileRecordOutFileButton.setActionCommand(BROWSE_RECORD_OUT);
         fileRecordOutFileButton.addActionListener(this);
         fileChooserPanel.add(fileRecordOutFileButton);
+
+        fileChooserPanel.add(new JLabel("(Optional) External csv file with transaction info (to read) : "));
+        externalFileInfoInField= new JTextField();
+        fileChooserPanel.add(externalFileInfoInField);
+
+        this.externalFileInfoInButton = new JButton("Browse ...");
+        externalFileInfoInButton.setActionCommand(BROWSE_EXTERNAL_FILE_IN);
+        externalFileInfoInButton.addActionListener(this);
+        fileChooserPanel.add(externalFileInfoInButton);
 
         return fileChooserPanel;
     }
