@@ -113,6 +113,20 @@ A simple tool named "create-external-file-for-har" create easily this csv file. 
 
 You need to select the csv file in the text field : "(Optional) External csv file with transaction info (to read) "
 
+### HAR created with BrowserMob Proxy
+This tool is compatible with Har file generated with BrowserMob Proxy.
+
+The BrowserMob Proxy create a har and could filter url or content (no binary). 
+
+The proxy client could be a browser or a client http in an application.
+
+BrowserMob Proxy could be embedded in a java application or in Selenium java code application.
+
+![Step to create script and record from HAR file from BrowserMob](doc/images/browsermob-proxy_har_convertor_script_record.png)
+
+The BrowserMob Proxy is available at this url : <br/>
+[Download the BrowserMob Proxy](https://github.com/lightbody/browsermob-proxy)
+
 ## More documentation from har-to-jmeter-convertor
 For more documentation look at README from [har-to-jmeter-convertor](https://github.com/vdaburon/har-to-jmeter-convertor)
 
