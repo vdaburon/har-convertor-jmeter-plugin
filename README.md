@@ -142,41 +142,42 @@ Help to see all parameters :
 <pre>
 C:\apache-jmeter\bin&gt;har-convertor-to-jmeter.cmd -help
 
-usage: io.github.vdaburon.jmeter.har.HarForJMeter [-add_pause &lt;add_pause&gt;] [-external_file_infos &lt;external_file_infos&gt;]
-       [-filter_exclude &lt;filter_exclude&gt;] [-filter_include &lt;filter_include&gt;] -har_in &lt;har_in&gt; [-help] -jmx_out &lt;jmx_out&gt;
-       [-new_tc_pause &lt;new_tc_pause&gt;] [-page_start_number &lt;page_start_number&gt;] [-record_out &lt;record_out&gt;]
-       [-remove_cache_request &lt;remove_cache_request&gt;] [-remove_cookie &lt;remove_cookie&gt;] [-sampler_start_number
-       &lt;sampler_start_number&gt;] [-use_lrwr_infos &lt;use_lrwr_infos&gt;]
+usage: io.github.vdaburon.jmeter.har.HarForJMeter [-add_pause &lt;add_pause&gt;] [-add_result_tree_record
+       &lt;add_result_tree_record&gt;] [-external_file_infos &lt;external_file_infos&gt;] [-filter_exclude &lt;filter_exclude&gt;]
+       [-filter_include &lt;filter_include&gt;] -har_in &lt;har_in&gt; [-help] -jmx_out &lt;jmx_out&gt; [-new_tc_pause &lt;new_tc_pause&gt;]
+       [-page_start_number &lt;page_start_number&gt;] [-record_out &lt;record_out&gt;] [-remove_cache_request
+       &lt;remove_cache_request&gt;] [-remove_cookie &lt;remove_cookie&gt;] [-sampler_start_number &lt;sampler_start_number&gt;]
+       [-use_lrwr_infos &lt;use_lrwr_infos&gt;]
 io.github.vdaburon.jmeter.har.HarForJMeter
- -add_pause &lt;add_pause&gt;                         Optional boolean, add Flow Control Action Pause after Transaction
-                                                Controller (default true)
- -external_file_infos &lt;external_file_infos&gt;     Optional, csv file contains external infos : timestamp transaction name 
-                                                and start or end
- -filter_exclude &lt;filter_exclude&gt;               Optional, regular expression to exclude url
- -filter_include &lt;filter_include&gt;               Optional, regular expression to include url
- -har_in &lt;har_in&gt;                               Har file to read (e.g : my_file.har)
- -help                                          Help and show parameters
- -jmx_out &lt;jmx_out&gt;                             JMeter file created to write (e.g : script.jmx)
- -new_tc_pause &lt;new_tc_pause&gt;                   Optional, create new Transaction Controller after request ms, same as
-                                                jmeter property : proxy.pause, need to be &gt; 0 if set. Usefully for Har
-                                                created by Firefox or Single Page Application (Angular, ReactJS, VuesJS
-                                                ...)
- -page_start_number &lt;page_start_number&gt;         Optional, the start page number for partial recording (default 1)
- -record_out &lt;record_out&gt;                       Optional, file xml contains exchanges likes recorded by JMeter
- -remove_cache_request &lt;remove_cache_request&gt;   Optional boolean, remove cache header in the http request (default true
-                                                because add a Cache Manager)
- -remove_cookie &lt;remove_cookie&gt;                 Optional boolean, remove cookie in http header (default true because add
-                                                a Cookie Manager)
- -sampler_start_number &lt;sampler_start_number&gt;   Optional, the start sampler number for partial recording (default 1)
- -use_lrwr_infos &lt;use_lrwr_infos&gt;               Optional, the har file has been generated with LoadRunner Web Recorder
-                                                and contains Transaction Name, expected value : 'transaction_name' or
-                                                don't add this parameter
-E.g : java -jar har-for-jmeter-&lt;version&gt;-jar-with-dependencies.jar -har_in myhar.har -jmx_out scriptout.jmx
--new_tc_pause 5000 -add_pause true -filter_include "https://mysite/.*" -filter_exclude "https://notmysite/*"
--page_start_number 50 -sampler_start_number 250
+ -add_pause &lt;add_pause&gt;                             Optional boolean, add Flow Control Action Pause after Transaction
+                                                    Controller (default true)
+ -add_result_tree_record &lt;add_result_tree_record&gt;   Optional boolean, add 'View Result Tree' to view the record.xml file
+                                                    created (default true), record_out must be not empty
+ -external_file_infos &lt;external_file_infos&gt;         Optional, csv file contains external infos : timestamp transaction
+                                                    name and start or end
+ -filter_exclude &lt;filter_exclude&gt;                   Optional, regular expression to exclude url
+ -filter_include &lt;filter_include&gt;                   Optional, regular expression to include url
+ -har_in &lt;har_in&gt;                                   Har file to read (e.g : my_file.har)
+ -help                                              Help and show parameters
+ -jmx_out &lt;jmx_out&gt;                                 JMeter file created to write (e.g : script.jmx)
+ -new_tc_pause &lt;new_tc_pause&gt;                       Optional, create new Transaction Controller after request ms, same
+                                                    as jmeter property : proxy.pause, need to be &gt; 0 if set. Usefully
+                                                    for Har created by Firefox or Single Page Application (Angular,
+                                                    ReactJS, VuesJS ...)
+ -page_start_number &lt;page_start_number&gt;             Optional, the start page number for partial recording (default 1)
+ -record_out &lt;record_out&gt;                           Optional, file xml contains exchanges likes recorded by JMeter
+ -remove_cache_request &lt;remove_cache_request&gt;       Optional boolean, remove cache header in the http request (default
+                                                    true because add a Cache Manager)
+ -remove_cookie &lt;remove_cookie&gt;                     Optional boolean, remove cookie in http header (default true because
+                                                    add a Cookie Manager)
+ -sampler_start_number &lt;sampler_start_number&gt;       Optional, the start sampler number for partial recording (default 1)
+ -use_lrwr_infos &lt;use_lrwr_infos&gt;                   Optional, the har file has been generated with LoadRunner Web
+                                                    Recorder and contains Transaction Name, expected value :
+                                                    'transaction_name' or don't add this parameter
+E.g : java -jar har-for-jmeter-&lt;version&gt;-jar-with-dependencies.jar -har_in myhar.har -jmx_out scriptout.jmx -record_out
+recording.xml -add_result_tree_record true -new_tc_pause 5000 -add_pause true -filter_include "https://mysite/.*"
+-filter_exclude "https://notmysite/*" -page_start_number 50 -sampler_start_number 250
 </pre>
-
-The parameter use_lrwr_infos correspond to checkbox "har created with lrwr". If true set parameter <code>-use_lrwr_infos transaction_name</code> if false don't add this parameter.
 
 <pre>
 C:\apache-jmeter\bin>har-convertor-to-jmeter.cmd -har_in "myhar.har" -jmx_out "script_out.jmx" -filter_include "https://mysite.com/.*" -filter_exclude "https://notmysite.com/.*" -add_pause true -new_tc_pause 5000
@@ -196,13 +197,16 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>har-convertor-jmeter-plugin</artifactId>
-<version>5.2</version>
+<version>6.0</version>
 ```
 
 ## License
 Licensed under the Apache License, Version 2.0
 
 ## Versions
+Version 6.0 date 2024-09-19, Use new library har-to-jmeter-convertor 6.0 for adding 'HTTP(S) Test Script Recorder' and 'View Results Tree' to view the Record.xml file created. Correct save file no url encoded name.
+
+Version 5.3 date 2024-09-13, Use new library har-to-jmeter-convertor 5.3 that correct PUT with no parameter, no content and mime-type ==  null
 
 Version 5.2 date 2024-06-20, Use new library har-to-jmeter-convertor 5.2 that correct extract parameters for mime type "form-urlencoded" ended with charset likes "application/x-www-form-urlencoded; charset=xxx"
 

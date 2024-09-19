@@ -6,7 +6,7 @@
 
     <groupId>io.github.vdaburon</groupId>
     <artifactId>har-convertor-jmeter-plugin</artifactId>
-    <version>5.2</version>
+    <version>6.0</version>
     <packaging>jar</packaging>
 
     <name>Apache JMeter Plugin to convert a HAR file to a JMeter script and Record XML</name>
@@ -62,6 +62,7 @@
         <mavenCentralAutoReleaseAfterClose>false</mavenCentralAutoReleaseAfterClose>
     </properties>
 
+
     <dependencies>
         <dependency>
             <groupId>org.apache.jmeter</groupId>
@@ -81,7 +82,7 @@
         <dependency>
             <groupId>io.github.vdaburon</groupId>
             <artifactId>har-to-jmeter-convertor</artifactId>
-            <version>5.2</version>
+            <version>6.0</version>
         </dependency>
     </dependencies>
 
@@ -170,7 +171,7 @@
                 -->
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.13</version>
+                <version>1.7.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>

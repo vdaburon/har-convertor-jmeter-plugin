@@ -75,6 +75,7 @@ public class HarConvertorGui extends AbstractAction implements
     private JCheckBox isRemoveCookieCheckbox;
     private JCheckBox isRemoveCacheRequestHeaderCheckbox;
     private JCheckBox isUseLrwrTransactionNameCheckbox;
+    private JCheckBox isAddResultTreeRecordCheckbox;
 
     private JButton btConvert;
     private JButton btConvertAndLoad;
@@ -234,7 +235,9 @@ public class HarConvertorGui extends AbstractAction implements
 
             boolean isRemoveCookieHeader = isRemoveCookieCheckbox.isSelected();
             boolean isRemoveCacheRequestHeader = isRemoveCacheRequestHeaderCheckbox.isSelected();
+            boolean isAddResultTreeRecord = isAddResultTreeRecordCheckbox.isSelected();
             boolean isUseLrwrTransactionName = isUseLrwrTransactionNameCheckbox.isSelected();
+
 
             String lrwr_info = "";
             if (isUseLrwrTransactionName) {
@@ -249,6 +252,7 @@ public class HarConvertorGui extends AbstractAction implements
             	log.info("fileHarIn=<"+ fileHarIn + ">");
                 log.info("fileJmxOut=<" + fileJmxOut + ">");
                 log.info("recordXmlOut=<" + recordXmlOut + ">");
+                log.info("isAddResultTreeRecord=<" + isAddResultTreeRecord + ">");
                 log.info("createNewTransactionAfterRequestMs=<" + createNewTransactionAfterRequestMs + ">");
                 log.info("isAddPause=<" + isAddPause + ">");
                 log.info("regexFilterInclude=<" + regexFilterInclude + ">");
@@ -260,7 +264,7 @@ public class HarConvertorGui extends AbstractAction implements
                 log.info("externalFileInfoIn=<" + externalFileInfoIn + ">");
                 log.info("****************************************");
 
-                HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader, regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber, lrwr_info, externalFileInfoIn);
+                HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader, regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber, lrwr_info, externalFileInfoIn, isAddResultTreeRecord);
 
                 log.info("After HarForJMeter.generateJmxAndRecord");
                 btConvert.setEnabled(true);
@@ -383,6 +387,9 @@ public class HarConvertorGui extends AbstractAction implements
         JLabel isRemoveCacheHeaderLabel = new JLabel("(Optional) Remove cache header in the http request (default true because add a Cache Manager)");
         isRemoveCacheRequestHeaderCheckbox= new JCheckBox("",true);
 
+        JLabel isAddResultTreeRecordLabel = new JLabel("(Optional) Add 'View Result Tree' to view the recording xml file created (default true)");
+        isAddResultTreeRecordCheckbox= new JCheckBox("",true);
+
         JLabel isUseLrwrTransactionNameLabel = new JLabel("(Optional) HAR was generated with LoadRunner Web Recorder and Transaction Names (default false)");
         isUseLrwrTransactionNameCheckbox= new JCheckBox("",false);
 
@@ -394,6 +401,9 @@ public class HarConvertorGui extends AbstractAction implements
 
         panel.add(isRemoveCacheHeaderLabel);
         panel.add(isRemoveCacheRequestHeaderCheckbox);
+
+        panel.add(isAddResultTreeRecordLabel);
+        panel.add(isAddResultTreeRecordCheckbox);
 
         panel.add(isUseLrwrTransactionNameLabel);
         panel.add(isUseLrwrTransactionNameCheckbox);
