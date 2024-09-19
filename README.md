@@ -24,6 +24,7 @@ Parameters are :
   e.g. har_in = myhar1.har, jmx_out is empty then file_out will be myhar1.jmx
 * record_out create the record xml file from the har file (could be open with the Listener View Results Tree) <br/>
   e.g. record_out = record.xml
+* add_result_tree_record, add a View Result Tree to view the Recording XML File Generated (default true), the record_out must be not empty
 * external_file_infos, external csv file contains information about Timestamp, Transaction Name, date start or end. <br/>
     e.g. external_file_infos = myappli_transactions.csv
 * new_tc_pause time between 2 urls to create a new page (Transaction Controller) (default 5000 = jmeter property value : proxy.pause=5000) <br/>
