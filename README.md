@@ -131,7 +131,8 @@ The BrowserUp Proxy **active** project is available at this url : <br/>
 Note : The BrowserMod Proxy tool is no more active (since september 2017) and it's recommended to migrate to BrowerUp proxy https://github.com/valfirst/browserup-proxy the "valfirst" GitHub username is important.
 
 
-## More documentation from har-to-jmeter-convertor
+## More documentation from har-to-jmeter-convertor CLI Tool
+This plugin use a **library** from the Command Line Interface tool (har-to-jmeter-convertor)<br/>
 For more documentation look at README from [har-to-jmeter-convertor](https://github.com/vdaburon/har-to-jmeter-convertor)
 
 ## Command line tool (CLI)
