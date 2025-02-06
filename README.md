@@ -202,13 +202,15 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>har-convertor-jmeter-plugin</artifactId>
-<version>6.0</version>
+<version>6.1</version>
 ```
 
 ## License
 Licensed under the Apache License, Version 2.0
 
 ## Versions
+Version 6.1 date 2025-01-28, Use new library har-to-jmeter-convertor 6.1 to correct a NullPointerException when creating the Recording XML file.
+
 Version 6.0 date 2024-09-19, Use new library har-to-jmeter-convertor 6.0 for adding 'HTTP(S) Test Script Recorder' and 'View Results Tree' to view the Record.xml file created. Correct save file no url encoded name.
 
 Version 5.3 date 2024-09-13, Use new library har-to-jmeter-convertor 5.3 that correct PUT with no parameter, no content and mime-type ==  null
