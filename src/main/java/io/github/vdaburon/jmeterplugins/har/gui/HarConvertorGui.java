@@ -18,6 +18,7 @@
 package io.github.vdaburon.jmeterplugins.har.gui;
 
 import io.github.vdaburon.jmeter.har.HarForJMeter;
+
 import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.JMeterFileFilter;
@@ -29,19 +30,23 @@ import org.apache.jmeter.gui.util.VerticalPanel;
 import org.apache.jmeter.save.SaveService;
 import org.apache.jorphan.collections.HashTree;
 import org.apache.jorphan.gui.ComponentUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 public class HarConvertorGui extends AbstractAction implements
-        ActionListener, UnsharedComponent, MenuCreator {
+        ActionListener, UnsharedComponent, MenuCreator, Serializable {
+
 	private static Set<String> commands = new HashSet<>();
 
     @SuppressWarnings("unused")
@@ -54,7 +59,8 @@ public class HarConvertorGui extends AbstractAction implements
     private static final String BROWSE_EXTERNAL_FILE_IN = "BROWSE_EXTERNAL_FILE_IN";
     private static final String ACTION_CONVERT = "ACTION_CONVERT";
     private static final String ACTION_CONVERT_AND_LOAD_SCRIPT = "ACTION_CONVERT_LOAD";
-    private static final String ACTION_MENU_TOOL = "ACTION_MENU_TOOL"; 
+    private static final String ACTION_MENU_TOOL = "ACTION_MENU_TOOL";
+    private static final String ACTION_CHECKBOX_WEBSOCKET = "ACTION_CHECKBOX_WEBSOCKET";
 
     private EscapeDialog messageDialog;
     
@@ -76,6 +82,7 @@ public class HarConvertorGui extends AbstractAction implements
     private JCheckBox isRemoveCacheRequestHeaderCheckbox;
     private JCheckBox isUseLrwrTransactionNameCheckbox;
     private JCheckBox isAddResultTreeRecordCheckbox;
+    private JCheckBox isWebSocketPDoornboschCheckbox;
 
     private JButton btConvert;
     private JButton btConvertAndLoad;
@@ -100,8 +107,6 @@ public class HarConvertorGui extends AbstractAction implements
         JFrame jfMainFrame = GuiPackage.getInstance().getMainFrame();
         harConvertorGui.showInputDialog(jfMainFrame);
     }
-
-
 
     public void showInputDialog(JFrame parent) {
         setupInputDialog(parent);
@@ -237,6 +242,7 @@ public class HarConvertorGui extends AbstractAction implements
             boolean isRemoveCacheRequestHeader = isRemoveCacheRequestHeaderCheckbox.isSelected();
             boolean isAddResultTreeRecord = isAddResultTreeRecordCheckbox.isSelected();
             boolean isUseLrwrTransactionName = isUseLrwrTransactionNameCheckbox.isSelected();
+            boolean isWebSocketPDoornbosch = isWebSocketPDoornboschCheckbox.isSelected();
 
 
             String lrwr_info = "";
@@ -253,6 +259,7 @@ public class HarConvertorGui extends AbstractAction implements
                 log.info("fileJmxOut=<" + fileJmxOut + ">");
                 log.info("recordXmlOut=<" + recordXmlOut + ">");
                 log.info("isAddResultTreeRecord=<" + isAddResultTreeRecord + ">");
+                log.info("isWebSocketPDoornbosch=<" + isWebSocketPDoornbosch + ">");
                 log.info("createNewTransactionAfterRequestMs=<" + createNewTransactionAfterRequestMs + ">");
                 log.info("isAddPause=<" + isAddPause + ">");
                 log.info("regexFilterInclude=<" + regexFilterInclude + ">");
@@ -264,7 +271,9 @@ public class HarConvertorGui extends AbstractAction implements
                 log.info("externalFileInfoIn=<" + externalFileInfoIn + ">");
                 log.info("****************************************");
 
-                HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader, regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber, lrwr_info, externalFileInfoIn, isAddResultTreeRecord);
+                HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader,
+                                                regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber, lrwr_info, externalFileInfoIn,
+                                                isAddResultTreeRecord, isWebSocketPDoornbosch);
 
                 log.info("After HarForJMeter.generateJmxAndRecord");
                 btConvert.setEnabled(true);
@@ -320,6 +329,25 @@ public class HarConvertorGui extends AbstractAction implements
                     externalFileInfoInField, false, new String[] { ".csv" }));
             labelStatus.setText("Waiting configuration ... ");
             labelStatus.setForeground(java.awt.Color.BLACK);
+        }
+
+        if (command.equals(ACTION_CHECKBOX_WEBSOCKET)) {
+            boolean isWSChecked = isWebSocketPDoornboschCheckbox.isSelected();
+            if (isWSChecked) {
+                try {
+                    // check if plugin "WebSocket Samplers by Peter Doornbosch" is present
+                    Class.forName("eu.luminis.jmeter.wssampler.WebsocketGeneralSampler");
+                    log.info("plugin \"WebSocket Samplers by Peter Doornbosch\" is present");
+                } catch (ClassNotFoundException ex) {
+                    labelStatus.setText("You must install the plugin 'WebSocket Samplers by Peter Doornbosch' to open the JMeter generated script file");
+                    labelStatus.setForeground(java.awt.Color.RED);
+                    btConvertAndLoad.setEnabled(false);
+                }
+            } else {
+                labelStatus.setText("Waiting configuration ... ");
+                labelStatus.setForeground(java.awt.Color.BLACK);
+                btConvertAndLoad.setEnabled(true);
+            }
         }
     }
 
@@ -378,6 +406,12 @@ public class HarConvertorGui extends AbstractAction implements
     private JPanel createCheckbox() {
         JPanel panel = new JPanel(new GridLayout(0, 2));
 
+        JLabel isWebSocketPDoornboschLabel = new JLabel("(Optional) Create WebSocket Sampler if HAR contains WebSocket Connection (default false)");
+        isWebSocketPDoornboschCheckbox= new JCheckBox("",false);
+        isWebSocketPDoornboschCheckbox.addActionListener(this);
+        isWebSocketPDoornboschCheckbox.setActionCommand(ACTION_CHECKBOX_WEBSOCKET);
+        isWebSocketPDoornboschCheckbox.setEnabled(true);
+
         JLabel isAddPauseLabel = new JLabel("(Optional) Add a pause between Transaction Controller (default true), time between 2 URLs must be > 0");
         isAddPauseCheckbox= new JCheckBox("",true);
 
@@ -392,6 +426,9 @@ public class HarConvertorGui extends AbstractAction implements
 
         JLabel isUseLrwrTransactionNameLabel = new JLabel("(Optional) HAR was generated with LoadRunner Web Recorder and Transaction Names (default false)");
         isUseLrwrTransactionNameCheckbox= new JCheckBox("",false);
+
+        panel.add(isWebSocketPDoornboschLabel);
+        panel.add(isWebSocketPDoornboschCheckbox);
 
         panel.add(isAddPauseLabel);
         panel.add(isAddPauseCheckbox);

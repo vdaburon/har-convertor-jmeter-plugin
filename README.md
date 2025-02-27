@@ -8,6 +8,8 @@
 
 An article about motivations to create this tool: https://dzone.com/articles/convert-a-har-file-to-jmeter-script
 
+Since version 7.0, **Websocket** is manage with samplers from the plugin "WebSocket Samplers by Peter Doornbosch".
+
 ## GUI interface in the JMeter Tools Menu
 This tool is present in the Menu Tools > vdn@github - HAR Convertor Tool
 
@@ -25,6 +27,7 @@ Parameters are :
 * record_out create the record xml file from the har file (could be open with the Listener View Results Tree) <br/>
   e.g. record_out = record.xml
 * add_result_tree_record, add a View Result Tree to view the Recording XML File Generated (default true), the record_out must be not empty
+* ws_with_pdoornbosch, create WebSocket Sampler if HAR contains WebSocket Connection (ws or wss) and WebSocket Exchange message (default false). Need this JMeter plugin "WebSocket Samplers by Peter Doornbosch" to open generated JMeter script.
 * external_file_infos, external csv file contains information about Timestamp, Transaction Name, date start or end. <br/>
     e.g. external_file_infos = myappli_transactions.csv
 * new_tc_pause time between 2 urls to create a new page (Transaction Controller) (default 5000 = jmeter property value : proxy.pause=5000) <br/>
@@ -130,6 +133,32 @@ The BrowserUp Proxy **active** project is available at this url : <br/>
 
 Note : The BrowserMod Proxy tool is no more active (since september 2017) and it's recommended to migrate to BrowerUp proxy https://github.com/valfirst/browserup-proxy the "valfirst" GitHub username is important.
 
+The BrowserUp Proxy **active** project is available at this url : <br/>
+[Goto the BrowserUp Proxy active project](https://github.com/valfirst/browserup-proxy)
+
+Note : The BrowserMod Proxy tool is no more active (since september 2017) and it's recommended to migrate to BrowerUp proxy https://github.com/valfirst/browserup-proxy the "valfirst" GitHub username/project is important.
+
+## Websocket use the plugin "WebSocket Samplers by Peter Doornbosch"
+If your Har file contains WebSocket Connection and Messages, check the checkbox <code>ws_with_pdoornbosch</code> (set true), this tool will try to create Websocket Samplers in the JMeter script generated and the exchanges in the Recording XML file if you set the record xml file name.
+
+Documentation at : https://bitbucket.org/pjtr/jmeter-websocket-samplers/src/master/
+
+The HAR is record from **Chrome** Browser not Firefox Browser and not Egde Browser (research in har file the attribute : '_webSocketMessages').
+
+Currently limitation to only one websocket connection and multi text messages (send or receive) in this websocket connection (binary message is not tested).
+
+Text message could be on "STOMP" format (https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol) or no "STOMP" (simple text).
+
+Need the plugin "WebSocket Samplers by Peter Doornbosch" to open the generated script that contain Websocket Samplers.
+
+This demonstration use the web site : https://websocket.org/tools/websocket-echo-server/
+
+![Script generated with Websocket samplers and xml record messages](doc/images/jmeter_websocket_script_and_xml_record.png)
+
+If you click on the checkbox "Create WebSocket Sampler if HAR contains WebScoket Connection" but the JMeter **have not the plugin** "WebSocket Samplers by Peter Doornbosch" a warning message is display and the button "CONVERT AND LOAD GENERATED SCRIPT" is disable.
+
+![Warning if the plugin "WebSocket Samplers by Peter Doornbosch" is not present](doc/images/har_convertor_tool_gui_check_ws_plugin.png)
+
 
 ## More documentation from har-to-jmeter-convertor CLI Tool
 This plugin use a **library** from the Command Line Interface tool (har-to-jmeter-convertor)<br/>
@@ -152,7 +181,7 @@ usage: io.github.vdaburon.jmeter.har.HarForJMeter [-add_pause &lt;add_pause&gt;]
        [-filter_include &lt;filter_include&gt;] -har_in &lt;har_in&gt; [-help] -jmx_out &lt;jmx_out&gt; [-new_tc_pause &lt;new_tc_pause&gt;]
        [-page_start_number &lt;page_start_number&gt;] [-record_out &lt;record_out&gt;] [-remove_cache_request
        &lt;remove_cache_request&gt;] [-remove_cookie &lt;remove_cookie&gt;] [-sampler_start_number &lt;sampler_start_number&gt;]
-       [-use_lrwr_infos &lt;use_lrwr_infos&gt;]
+       [-use_lrwr_infos &lt;use_lrwr_infos&gt;] [-ws_with_pdoornbosch &lt;ws_with_pdoornbosch&gt;]
 io.github.vdaburon.jmeter.har.HarForJMeter
  -add_pause &lt;add_pause&gt;                             Optional boolean, add Flow Control Action Pause after Transaction
                                                     Controller (default true)
@@ -179,9 +208,13 @@ io.github.vdaburon.jmeter.har.HarForJMeter
  -use_lrwr_infos &lt;use_lrwr_infos&gt;                   Optional, the har file has been generated with LoadRunner Web
                                                     Recorder and contains Transaction Name, expected value :
                                                     'transaction_name' or don't add this parameter
+ -ws_with_pdoornbosch &lt;ws_with_pdoornbosch&gt;         Optional boolean, Manage websocket messages with the JMeter plugin
+                                                    from Peter DOORNBOSH (default false), if true need the plugin from
+                                                    Peter DOORNBOSH to open the generated script
 E.g : java -jar har-for-jmeter-&lt;version&gt;-jar-with-dependencies.jar -har_in myhar.har -jmx_out scriptout.jmx -record_out
 recording.xml -add_result_tree_record true -new_tc_pause 5000 -add_pause true -filter_include "https://mysite/.*"
--filter_exclude "https://notmysite/*" -page_start_number 50 -sampler_start_number 250
+-filter_exclude "https://notmysite/*" -page_start_number 50 -sampler_start_number 250 -ws_with_pdoornbosch false
+
 </pre>
 
 <pre>
@@ -202,13 +235,15 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>har-convertor-jmeter-plugin</artifactId>
-<version>6.1</version>
+<version>7.0</version>
 ```
 
 ## License
 Licensed under the Apache License, Version 2.0
 
 ## Versions
+Version 7.0 date 2025-02-27, Use new library har-to-jmeter-convertor 7.0 add manage the websocket messages with 'WebSocket Samplers by Peter Doornbosch', add checkbox for boolean parameter 'ws_with_pdoornbosch' (default unchecked == false).
+
 Version 6.1 date 2025-01-28, Use new library har-to-jmeter-convertor 6.1 to correct a NullPointerException when creating the Recording XML file.
 
 Version 6.0 date 2024-09-19, Use new library har-to-jmeter-convertor 6.0 for adding 'HTTP(S) Test Script Recorder' and 'View Results Tree' to view the Record.xml file created. Correct save file no url encoded name.
