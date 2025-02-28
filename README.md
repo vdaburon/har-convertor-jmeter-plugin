@@ -133,11 +133,6 @@ The BrowserUp Proxy **active** project is available at this url : <br/>
 
 Note : The BrowserMod Proxy tool is no more active (since september 2017) and it's recommended to migrate to BrowerUp proxy https://github.com/valfirst/browserup-proxy the "valfirst" GitHub username is important.
 
-The BrowserUp Proxy **active** project is available at this url : <br/>
-[Goto the BrowserUp Proxy active project](https://github.com/valfirst/browserup-proxy)
-
-Note : The BrowserMod Proxy tool is no more active (since september 2017) and it's recommended to migrate to BrowerUp proxy https://github.com/valfirst/browserup-proxy the "valfirst" GitHub username/project is important.
-
 ## Websocket use the plugin "WebSocket Samplers by Peter Doornbosch"
 If your Har file contains WebSocket Connection and Messages, check the checkbox <code>ws_with_pdoornbosch</code> (set true), this tool will try to create Websocket Samplers in the JMeter script generated and the exchanges in the Recording XML file if you set the record xml file name.
 
