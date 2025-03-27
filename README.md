@@ -230,13 +230,15 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>har-convertor-jmeter-plugin</artifactId>
-<version>7.0</version>
+<version>7.1</version>
 ```
 
 ## License
 Licensed under the Apache License, Version 2.0
 
 ## Versions
+Version 7.1 date 2025-03-27, Use new library har-to-jmeter-convertor 7.1 remove request headers from HTTP/2, these headers start with ':' likes ":authority", ":method", ":path" or ":scheme" correct Issue #2. Don't create HttpSampler for url "data:".
+
 Version 7.0 date 2025-02-27, Use new library har-to-jmeter-convertor 7.0 add manage the websocket messages with 'WebSocket Samplers by Peter Doornbosch', add checkbox for boolean parameter 'ws_with_pdoornbosch' (default unchecked == false).
 
 Version 6.1 date 2025-01-28, Use new library har-to-jmeter-convertor 6.1 to correct a NullPointerException when creating the Recording XML file.
