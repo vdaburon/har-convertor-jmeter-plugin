@@ -150,7 +150,7 @@ This demonstration use the web site : https://websocket.org/tools/websocket-echo
 
 ![Script generated with Websocket samplers and xml record messages](doc/images/jmeter_websocket_script_and_xml_record.png)
 
-If you click on the checkbox "Create WebSocket Sampler if HAR contains WebScoket Connection" but the JMeter **have not the plugin** "WebSocket Samplers by Peter Doornbosch" a warning message is display and the button "CONVERT AND LOAD GENERATED SCRIPT" is disable.
+If you click on the checkbox "Create WebSocket Sampler if HAR contains WebSocket Connection" but the JMeter **have not the plugin** "WebSocket Samplers by Peter Doornbosch" a warning message is display and the button "CONVERT AND LOAD GENERATED SCRIPT" is disable.
 
 ![Warning if the plugin "WebSocket Samplers by Peter Doornbosch" is not present](doc/images/har_convertor_tool_gui_check_ws_plugin.png)
 
