@@ -82,18 +82,6 @@ Launch the "Convertor tool" : <br/>
 Tool results : Open the script created and the record.xml in a View Results Tree <br/>
 ![Open the script created](doc/images/jmeter_script_record_created.png)
 
-### HAR created in Chrome Browser with the LoadRunner Web Recorder Chrome Extension
-This tool is compatible with Har file generated with the LoadRunner Web Recorder Chrome Extension.
-
-The main advantage is to declare **Transaction Names when recording** and navigate to the web site. This transactions will be Page Names (Transaction Controllers names) in the JMeter script.
-
-![Step to create script and record from HAR file from LoadRunner Web Recorder](doc/images/lrwr_chrome_extension_har_convertor_script_record.png)
-
-The LoadRunner Web Recorder Chrome Extension is available at this url : <br/>
-[Download the Recorder extension for Chrome : "HarGeneratorChrome"](https://www.microfocus.com/marketplace/appdelivery/content/recorder-extension-for-chrome)
-
-You need to check to checkbox "HAR was generated with LoadRunner Web Recorder and Transaction Names" to indicate that is a HAR file generated with LoadRunner Web Recorder (lrwr), default false (unchecked).
-
 ### Standard HAR file created with Firefox, Chrome, Edge with external csv file for transaction information
 You could add an external file that contains information about transaction name start and end.
 
@@ -132,6 +120,18 @@ The BrowserUp Proxy **active** project is available at this url : <br/>
 [Goto the BrowserUp Proxy active project](https://github.com/valfirst/browserup-proxy)
 
 Note : The BrowserMod Proxy tool is no more active (since september 2017) and it's recommended to migrate to BrowerUp proxy https://github.com/valfirst/browserup-proxy the "valfirst" GitHub username is important.
+
+### HAR created in Chrome Browser with the OpenText Professional Performance Engineering (LoadRunner) Web Recorder Chrome Extension
+This tool is compatible with Har file generated with the LoadRunner Web Recorder Chrome Extension.
+
+The main advantage is to declare **Transaction Names when recording** and navigate to the web site. This transactions will be Page Names (Transaction Controllers names) in the JMeter script.
+
+![Step to create script and record from HAR file from LoadRunner Web Recorder](doc/images/lrwr_chrome_extension_har_convertor_script_record.png)
+
+The OpenText Professional Performance Engineering (LoadRunner) Web Recorder Chrome Extension is available at this url : <br/>
+[Download the Recorder extension for Chrome : "HarGeneratorChrome"](https://marketplace.opentext.com/appdelivery/content/recorder-extension-for-chrome)
+
+You need to check to checkbox "HAR was generated with LoadRunner Web Recorder and Transaction Names" to indicate that is a HAR file generated with LoadRunner Web Recorder (lrwr), default false (unchecked).
 
 ## Websocket use the plugin "WebSocket Samplers by Peter Doornbosch"
 If your Har file contains WebSocket Connection and Messages, check the checkbox <code>ws_with_pdoornbosch</code> (set true), this tool will try to create Websocket Samplers in the JMeter script generated and the exchanges in the Recording XML file if you set the record xml file name.
