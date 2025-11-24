@@ -6,7 +6,7 @@
 
     <groupId>io.github.vdaburon</groupId>
     <artifactId>har-convertor-jmeter-plugin</artifactId>
-    <version>7.1</version>
+    <version>8.0</version>
     <packaging>jar</packaging>
 
     <name>Apache JMeter Plugin to convert a HAR file to a JMeter script and Record XML</name>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>io.github.vdaburon</groupId>
             <artifactId>har-to-jmeter-convertor</artifactId>
-            <version>7.1</version>
+            <version>8.0</version>
         </dependency>
     </dependencies>
 
@@ -169,14 +169,15 @@
                  if autoReleaseAfterClose == true then release in maven central;
                  if autoReleaseAfterClose == false then release in stagging only not maven central
                 -->
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.7.0</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.9.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>${mavenCentralAutoReleaseAfterClose}</autoReleaseAfterClose>
+                    <publishingServerId>central_publishing</publishingServerId>
+                    <centralBaseUrl>https://central.sonatype.com</centralBaseUrl>
+                    <waitUntil>published</waitUntil>
+                    <autoPublish>${mavenCentralAutoReleaseAfterClose}</autoPublish>
                 </configuration>
             </plugin>
         </plugins>

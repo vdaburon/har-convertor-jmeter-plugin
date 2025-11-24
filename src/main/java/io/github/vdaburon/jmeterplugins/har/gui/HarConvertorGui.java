@@ -74,6 +74,7 @@ public class HarConvertorGui extends AbstractAction implements
     private JButton fileHarInFileButton;
     private JTextField regexFilterIncludeField;
     private JTextField regexFilterExcludeField;
+    private JTextField removeHeadersField;
     private JButton fileJmxOutFileButton;
     private JButton fileRecordOutFileButton;
     private JButton externalFileInfoInButton;
@@ -186,6 +187,7 @@ public class HarConvertorGui extends AbstractAction implements
             String recordXmlOut= fileRecordOutTextField.getText();
             String regexFilterInclude= regexFilterIncludeField.getText();
             String regexFilterExclude= regexFilterExcludeField.getText();
+            String removeHeaders = removeHeadersField.getText();
             
             if (fileJmxOut.trim().isEmpty()) {
             	fileJmxOut = fileHarIn.substring(0,fileHarIn.lastIndexOf(".")) + ".jmx";
@@ -264,6 +266,7 @@ public class HarConvertorGui extends AbstractAction implements
                 log.info("isAddPause=<" + isAddPause + ">");
                 log.info("regexFilterInclude=<" + regexFilterInclude + ">");
                 log.info("regexFilterExclude=<" + regexFilterExclude + ">");
+                log.info("removeHeaders=<" + removeHeaders + ">");
                 log.info("isRemoveCookieHeader=<" + isRemoveCookieHeader + ">");
                 log.info("samplerStartNumber=<" + samplerStartNumber + ">");
                 log.info("samplerStartNumber=<" + samplerStartNumber + ">");
@@ -273,7 +276,7 @@ public class HarConvertorGui extends AbstractAction implements
 
                 HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader,
                                                 regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber, lrwr_info, externalFileInfoIn,
-                                                isAddResultTreeRecord, isWebSocketPDoornbosch);
+                                                isAddResultTreeRecord, isWebSocketPDoornbosch,removeHeaders);
 
                 log.info("After HarForJMeter.generateJmxAndRecord");
                 btConvert.setEnabled(true);
@@ -377,6 +380,9 @@ public class HarConvertorGui extends AbstractAction implements
         JLabel regexFilterExcludeLabel = new JLabel("(Optional) Regular expression matches for filter Exclude URL");
         regexFilterExcludeField = new JTextField("", 80);
 
+        JLabel removeHeadersFieldLabel = new JLabel("(Optional) Remove Headers (comma separator case insensitive)");
+        removeHeadersField = new JTextField("", 80);
+
         JLabel pauseBetweenUrlLabel = new JLabel("(Optional) Time (ms) between 2 URLs to create a new page (Transaction Controller)");
         pauseBetweenUrlTextField = new JTextField("5000", 80);
 
@@ -400,6 +406,10 @@ public class HarConvertorGui extends AbstractAction implements
 
         panel.add(regexFilterExcludeLabel);
         panel.add(regexFilterExcludeField);
+
+        panel.add(removeHeadersFieldLabel);
+        panel.add(removeHeadersField);
+
         return panel;
     }
 
