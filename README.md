@@ -4,7 +4,11 @@
   <p align="center"><a href="https://github.com/vdaburon/har-convertor-jmeter-plugin">Link to github project har-convertor-jmeter-plugin</a></p>
 </p>
 
-# Convert a HAR file to a JMeter script and a Record XML file.
+# Convert a HAR (Http ARchive) file to a JMeter script and a Record XML file.
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.vdaburon/har-convertor-jmeter-plugin)](https://central.sonatype.com/artifact/io.github.vdaburon/har-convertor-jmeter-plugin)
+[![Apache License](http://img.shields.io/badge/license-Apache-green.svg)](https://github.com/vdaburon/CreateHtmlForFilesInDirectory/blob/main/LICENSE)
+![Free](https://img.shields.io/badge/free-open--source-green.svg)
+[![Apache JMeter](https://img.shields.io/badge/Apache%20JMeter-green)](https://jmeter.apache.org/)
 
 An article about motivations to create this tool: https://dzone.com/articles/convert-a-har-file-to-jmeter-script
 
