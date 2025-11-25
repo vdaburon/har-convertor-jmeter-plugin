@@ -44,7 +44,7 @@ Parameters are :
 * filter_exclude, the regular expression matches the URL to Exclude (second filter) <br/>
   * default all = empty (no filter)
   * e.g. filter_exclude=https://notmysite.com/.*
-  * or filter statics, filter_exclude=(?i).*\.(bmp|css|js|gif|ico|jpe?g|png|swf|eot|otf|ttf|mp4|woff|woff2|svg)
+  * or filter statics, filter_exclude=(?i).*\\.(bmp|css|js|gif|ico|jpe?g|png|swf|eot|otf|ttf|mp4|woff|woff2|svg)
 * remove_headers, remove a list of http headers (comma separator, case insensitive), e.g: <code>-remove_headers "User-Agent,Pragma,X-TOKEN"</code> 
 * add_pause checkbox, add Flow Control Action Pause, parameter new_tc_pause must be > 0 (default true) <br/>
 * remove_cookie checkbox , remove header with cookie because add a Cookie Manager in the script (default true) <br/>
@@ -234,7 +234,7 @@ This tool could be installed with the jmeter-plugins-manager from jmeter.plugins
 The tool name is : "vdn@github - har-convertor-jmeter-tool"
 
 ## Usage Maven
-The maven groupId, artifactId and version, this plugin is in the **Maven Central Repository** [![Maven Central har-convertor-jmeter-plugin](https://maven-badges.herokuapp.com/maven-central/io.github.vdaburon/har-convertor-jmeter-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.vdaburon/har-convertor-jmeter-plugin)
+The maven groupId, artifactId and version, this plugin is in the **Maven Central Repository** [![Maven Central](https://img.shields.io/maven-central/v/io.github.vdaburon/har-convertor-jmeter-plugin)](https://central.sonatype.com/artifact/io.github.vdaburon/har-convertor-jmeter-plugin)
 
 ```xml
 <groupId>io.github.vdaburon</groupId>
