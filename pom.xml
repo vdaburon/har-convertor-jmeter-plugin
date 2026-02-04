@@ -6,7 +6,7 @@
 
     <groupId>io.github.vdaburon</groupId>
     <artifactId>har-convertor-jmeter-plugin</artifactId>
-    <version>8.0</version>
+    <version>9.1</version>
     <packaging>jar</packaging>
 
     <name>Apache JMeter Plugin to convert a HAR file to a JMeter script and Record XML</name>
@@ -44,22 +44,15 @@
         <url>https://github.com/vdaburon/har-convertor-jmeter-plugin</url>
         <tag>HEAD</tag>
     </scm>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mavenCentralAutoReleaseAfterClose>false</mavenCentralAutoReleaseAfterClose>
+        <!-- This Jackson version is available with JMeter 5.6.3, need version >= 2.15 -->
+        <jackson.version>2.16.1</jackson.version>
+        <jackson.scope>provided</jackson.scope>
     </properties>
 
 
@@ -69,6 +62,25 @@
             <artifactId>ApacheJMeter_core</artifactId>
             <version>5.5</version>
             <scope>provided</scope>
+            <exclusions>
+                <!-- Use same version of jackson as available with JMeter 5.6.3 -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -82,7 +94,47 @@
         <dependency>
             <groupId>io.github.vdaburon</groupId>
             <artifactId>har-to-jmeter-convertor</artifactId>
-            <version>8.0</version>
+            <version>9.1</version>
+            <exclusions>
+                <!-- Use same version of jackson as available with JMeter 5.6.3 -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <!-- Use commons-lang3 library provided by JMeter to avoid conflict -->
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Use same version of jackson as available with JMeter 5.6.3 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+            <scope>${jackson.scope}</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+            <scope>${jackson.scope}</scope>
+        </dependency>
+        <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+            <scope>${jackson.scope}</scope>
         </dependency>
     </dependencies>
 
@@ -128,7 +180,7 @@
                 <!-- create the uber jar : mvn clean package -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>3.8.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -165,13 +217,13 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- deploy jar in maven central or stagging only : mvn clean deploy
-                 if autoReleaseAfterClose == true then release in maven central;
-                 if autoReleaseAfterClose == false then release in stagging only not maven central
+                <!-- deploy jar in maven central or stagging only : mvn -DmavenCentralAutoReleaseAfterClose=false clean deploy
+                 if mavenCentralAutoReleaseAfterClose == true then release in maven central;
+                 if mavenCentralAutoReleaseAfterClose == false then release in stagging only not maven central
                 -->
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.9.0</version>
+                <version>0.10.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central_publishing</publishingServerId>

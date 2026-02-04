@@ -75,13 +75,13 @@ public class HarConvertorGui extends AbstractAction implements
     private JTextField regexFilterIncludeField;
     private JTextField regexFilterExcludeField;
     private JTextField removeHeadersField;
+    private JTextField jacksonParserStringMaxField;
     private JButton fileJmxOutFileButton;
     private JButton fileRecordOutFileButton;
     private JButton externalFileInfoInButton;
     private JCheckBox isAddPauseCheckbox;
     private JCheckBox isRemoveCookieCheckbox;
     private JCheckBox isRemoveCacheRequestHeaderCheckbox;
-    private JCheckBox isUseLrwrTransactionNameCheckbox;
     private JCheckBox isAddResultTreeRecordCheckbox;
     private JCheckBox isWebSocketPDoornboschCheckbox;
 
@@ -188,7 +188,8 @@ public class HarConvertorGui extends AbstractAction implements
             String regexFilterInclude= regexFilterIncludeField.getText();
             String regexFilterExclude= regexFilterExcludeField.getText();
             String removeHeaders = removeHeadersField.getText();
-            
+            String jacksonParserStringMax = jacksonParserStringMaxField.getText();
+
             if (fileJmxOut.trim().isEmpty()) {
             	fileJmxOut = fileHarIn.substring(0,fileHarIn.lastIndexOf(".")) + ".jmx";
             }
@@ -240,17 +241,26 @@ public class HarConvertorGui extends AbstractAction implements
                 samplerStartNumber  = 1;
             }
 
+            int iJacksonParserStringMax = HarForJMeter.K_JACKSON_PARSER_STRING_MAX_DEFAULT;
+            if (!jacksonParserStringMax.isEmpty()) {
+                try {
+                    iJacksonParserStringMax = Integer.parseInt(jacksonParserStringMax);
+                } catch (Exception ex) {
+                    log.warn("Error parsing int parameter " + ", value = " + jacksonParserStringMax + ", set to " + HarForJMeter.K_JACKSON_PARSER_STRING_MAX_DEFAULT + " Default value");
+                    iJacksonParserStringMax = HarForJMeter.K_JACKSON_PARSER_STRING_MAX_DEFAULT;
+                }
+            }
+            if (iJacksonParserStringMax <= 0) {
+                iJacksonParserStringMax  = HarForJMeter.K_JACKSON_PARSER_STRING_MAX_DEFAULT;
+            }
+            if (iJacksonParserStringMax != HarForJMeter.K_JACKSON_PARSER_STRING_MAX_DEFAULT && iJacksonParserStringMax > 1024) {
+                log.info("Set " + HarForJMeter.K_JACKSON_PARSER_STRING_MAX + "=<" + iJacksonParserStringMax + ">");
+            }
+
             boolean isRemoveCookieHeader = isRemoveCookieCheckbox.isSelected();
             boolean isRemoveCacheRequestHeader = isRemoveCacheRequestHeaderCheckbox.isSelected();
             boolean isAddResultTreeRecord = isAddResultTreeRecordCheckbox.isSelected();
-            boolean isUseLrwrTransactionName = isUseLrwrTransactionNameCheckbox.isSelected();
             boolean isWebSocketPDoornbosch = isWebSocketPDoornboschCheckbox.isSelected();
-
-
-            String lrwr_info = "";
-            if (isUseLrwrTransactionName) {
-                lrwr_info = HarForJMeter.K_LRWR_USE_TRANSACTION_NAME;
-            }
 
             try {
             	btConvert.setEnabled(false);
@@ -267,15 +277,15 @@ public class HarConvertorGui extends AbstractAction implements
                 log.info("regexFilterInclude=<" + regexFilterInclude + ">");
                 log.info("regexFilterExclude=<" + regexFilterExclude + ">");
                 log.info("removeHeaders=<" + removeHeaders + ">");
+                log.info("jacksonParserStringMax=<" + iJacksonParserStringMax + ">");
                 log.info("isRemoveCookieHeader=<" + isRemoveCookieHeader + ">");
                 log.info("samplerStartNumber=<" + samplerStartNumber + ">");
                 log.info("samplerStartNumber=<" + samplerStartNumber + ">");
-                log.info("lrwr_info=<" + lrwr_info + ">");
                 log.info("externalFileInfoIn=<" + externalFileInfoIn + ">");
                 log.info("****************************************");
 
-                HarForJMeter.generateJmxAndRecord(fileHarIn, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader,
-                                                regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber, lrwr_info, externalFileInfoIn,
+                HarForJMeter.generateJmxAndRecord(fileHarIn, iJacksonParserStringMax, fileJmxOut,createNewTransactionAfterRequestMs,isAddPause, isRemoveCookieHeader, isRemoveCacheRequestHeader,
+                                                regexFilterInclude, regexFilterExclude, recordXmlOut, pageStartNumber, samplerStartNumber, externalFileInfoIn,
                                                 isAddResultTreeRecord, isWebSocketPDoornbosch,removeHeaders);
 
                 log.info("After HarForJMeter.generateJmxAndRecord");
@@ -294,6 +304,7 @@ public class HarConvertorGui extends AbstractAction implements
                 }
              } catch (Exception e) {
                 e.printStackTrace();
+                log.warn("Tool HAR Convertor Finished KO, exception = " + e);
                 except = e;
                 btConvert.setEnabled(true);
                 btConvertAndLoad.setEnabled(true);
@@ -392,6 +403,9 @@ public class HarConvertorGui extends AbstractAction implements
         JLabel samplerStartNumberLabel = new JLabel("(Optional) Sampler start number usually for partial recording (default 1)");
         samplerStartNumberTextField = new JTextField("", 80);
 
+        JLabel jacksonParserStringMaxLabel = new JLabel("(Optional) Change Jackson String length size (default integer size = 20000000) for very large JSON");
+        jacksonParserStringMaxField = new JTextField("", 80);
+
         panel.add(pauseBetweenUrlLabel);
         panel.add(pauseBetweenUrlTextField);
 
@@ -409,6 +423,9 @@ public class HarConvertorGui extends AbstractAction implements
 
         panel.add(removeHeadersFieldLabel);
         panel.add(removeHeadersField);
+
+        panel.add(jacksonParserStringMaxLabel);
+        panel.add(jacksonParserStringMaxField);
 
         return panel;
     }
@@ -434,9 +451,6 @@ public class HarConvertorGui extends AbstractAction implements
         JLabel isAddResultTreeRecordLabel = new JLabel("(Optional) Add 'View Result Tree' to view the recording xml file created (default true)");
         isAddResultTreeRecordCheckbox= new JCheckBox("",true);
 
-        JLabel isUseLrwrTransactionNameLabel = new JLabel("(Optional) HAR was generated with LoadRunner Web Recorder and Transaction Names (default false)");
-        isUseLrwrTransactionNameCheckbox= new JCheckBox("",false);
-
         panel.add(isWebSocketPDoornboschLabel);
         panel.add(isWebSocketPDoornboschCheckbox);
 
@@ -451,9 +465,6 @@ public class HarConvertorGui extends AbstractAction implements
 
         panel.add(isAddResultTreeRecordLabel);
         panel.add(isAddResultTreeRecordCheckbox);
-
-        panel.add(isUseLrwrTransactionNameLabel);
-        panel.add(isUseLrwrTransactionNameCheckbox);
 
         return panel;
     }

@@ -31,7 +31,6 @@ Parameters are :
 * record_out create the record xml file from the har file (could be open with the Listener View Results Tree) <br/>
   e.g. record_out = record.xml
 * add_result_tree_record, add a View Result Tree to view the Recording XML File Generated (default true), the record_out must be not empty
-* ws_with_pdoornbosch, create WebSocket Sampler if HAR contains WebSocket Connection (ws or wss) and WebSocket Exchange message (default false). Need this JMeter plugin "WebSocket Samplers by Peter Doornbosch" to open generated JMeter script.
 * external_file_infos, external csv file contains information about Timestamp, Transaction Name, date start or end. <br/>
     e.g. external_file_infos = myappli_transactions.csv
 * new_tc_pause time between 2 urls to create a new page (Transaction Controller) (default 5000 = jmeter property value : proxy.pause=5000) <br/>
@@ -46,11 +45,12 @@ Parameters are :
   * e.g. filter_exclude=https://notmysite.com/.*
   * or filter statics, filter_exclude=(?i).*\\.(bmp|css|js|gif|ico|jpe?g|png|swf|eot|otf|ttf|mp4|woff|woff2|svg)
 * remove_headers, remove a list of http headers (comma separator, case insensitive), e.g: <code>-remove_headers "User-Agent,Pragma,X-TOKEN"</code> 
+* jackson_parser_string_max, parameter to change default Jackson String length size (default empty, use the integer size value = 20000000, around 19MB)<br/>
+* ws_with_pdoornbosch, create WebSocket Sampler if HAR contains WebSocket Connection (ws or wss) and WebSocket Exchange message (default false). Need this JMeter plugin "WebSocket Samplers by Peter Doornbosch" to open generated JMeter script.
 * add_pause checkbox, add Flow Control Action Pause, parameter new_tc_pause must be > 0 (default true) <br/>
 * remove_cookie checkbox , remove header with cookie because add a Cookie Manager in the script (default true) <br/>
 * remove_cache_request checkbox, remove cache request header because add a Cache Manager in the script (default true) <br/>
-* har created with lrwr, the har file has been generated with LoadRunner Web Recorder Chrome extension and contains Transaction Name, expected values : true or false (default false = unchecked) <br/>
-
+* add_result_tree_record, add to the "Test Plan" a "HTTP(S) Test Script Recorder" and "View Results Tree" to load the record_out xml file
 
 Status, the status line contains the tool status or the tool result.
 
@@ -126,18 +126,6 @@ The BrowserUp Proxy **active** project is available at this url : <br/>
 
 Note : The BrowserMod Proxy tool is no more active (since september 2017) and it's recommended to migrate to BrowerUp proxy https://github.com/valfirst/browserup-proxy the "valfirst" GitHub username is important.
 
-### HAR created in Chrome Browser with the OpenText Professional Performance Engineering (LoadRunner) Web Recorder Chrome Extension
-This tool is compatible with Har file generated with the LoadRunner Web Recorder Chrome Extension.
-
-The main advantage is to declare **Transaction Names when recording** and navigate to the web site. This transactions will be Page Names (Transaction Controllers names) in the JMeter script.
-
-![Step to create script and record from HAR file from LoadRunner Web Recorder](doc/images/lrwr_chrome_extension_har_convertor_script_record.png)
-
-The OpenText Professional Performance Engineering (LoadRunner) Web Recorder Chrome Extension is available at this url : <br/>
-[Download the Recorder extension for Chrome : "HarGeneratorChrome"](https://marketplace.opentext.com/appdelivery/content/recorder-extension-for-chrome)
-
-You need to check to checkbox "HAR was generated with LoadRunner Web Recorder and Transaction Names" to indicate that is a HAR file generated with LoadRunner Web Recorder (lrwr), default false (unchecked).
-
 ## Websocket use the plugin "WebSocket Samplers by Peter Doornbosch"
 If your Har file contains WebSocket Connection and Messages, check the checkbox <code>ws_with_pdoornbosch</code> (set true), this tool will try to create Websocket Samplers in the JMeter script generated and the exchanges in the Recording XML file if you set the record xml file name.
 
@@ -178,42 +166,45 @@ C:\apache-jmeter\bin&gt;har-convertor-to-jmeter.cmd -help
 
 usage: io.github.vdaburon.jmeter.har.HarForJMeter [-add_pause &lt;add_pause&gt;] [-add_result_tree_record
        &lt;add_result_tree_record&gt;] [-external_file_infos &lt;external_file_infos&gt;] [-filter_exclude &lt;filter_exclude&gt;]
-       [-filter_include &lt;filter_include&gt;] -har_in &lt;har_in&gt; [-help] -jmx_out &lt;jmx_out&gt; [-new_tc_pause &lt;new_tc_pause&gt;]
-       [-page_start_number &lt;page_start_number&gt;] [-record_out &lt;record_out&gt;] [-remove_cache_request
-       &lt;remove_cache_request&gt;] [-remove_cookie &lt;remove_cookie&gt;] [-remove_headers &lt;remove_headers&gt;]
-       [-sampler_start_number &lt;sampler_start_number&gt;] [-use_lrwr_infos &lt;use_lrwr_infos&gt;] [-ws_with_pdoornbosch
-       &lt;ws_with_pdoornbosch&gt;]
+       [-filter_include &lt;filter_include&gt;] -har_in &lt;har_in&gt; [-help] [-jackson_parser_string_max
+       &lt;jackson_parser_string_max&gt;] -jmx_out &lt;jmx_out&gt; [-new_tc_pause &lt;new_tc_pause&gt;] [-page_start_number
+       &lt;page_start_number&gt;] [-record_out &lt;record_out&gt;] [-remove_cache_request &lt;remove_cache_request&gt;] [-remove_cookie
+       &lt;remove_cookie&gt;] [-remove_headers &lt;remove_headers&gt;] [-sampler_start_number &lt;sampler_start_number&gt;]
+       [-ws_with_pdoornbosch &lt;ws_with_pdoornbosch&gt;]
 io.github.vdaburon.jmeter.har.HarForJMeter
- -add_pause &lt;add_pause&gt;                             Optional boolean, add Flow Control Action Pause after Transaction
-                                                    Controller (default true)
- -add_result_tree_record &lt;add_result_tree_record&gt;   Optional boolean, add 'View Result Tree' to view the record.xml file
-                                                    created (default true), record_out must be not empty
- -external_file_infos &lt;external_file_infos&gt;         Optional, csv file contains external infos : timestamp transaction
-                                                    name and start or end
- -filter_exclude &lt;filter_exclude&gt;                   Optional, regular expression to exclude url
- -filter_include &lt;filter_include&gt;                   Optional, regular expression to include url
- -har_in &lt;har_in&gt;                                   Har file to read (e.g : my_file.har)
- -help                                              Help and show parameters
- -jmx_out &lt;jmx_out&gt;                                 JMeter file created to write (e.g : script.jmx)
- -new_tc_pause &lt;new_tc_pause&gt;                       Optional, create new Transaction Controller after request ms, same
-                                                    as jmeter property : proxy.pause, need to be &gt; 0 if set. Usefully
-                                                    for Har created by Firefox or Single Page Application (Angular,
-                                                    ReactJS, VuesJS ...)
- -page_start_number &lt;page_start_number&gt;             Optional, the start page number for partial recording (default 1)
- -record_out &lt;record_out&gt;                           Optional, file xml contains exchanges likes recorded by JMeter
- -remove_cache_request &lt;remove_cache_request&gt;       Optional boolean, remove cache header in the http request (default
-                                                    true because add a Cache Manager)
- -remove_cookie &lt;remove_cookie&gt;                     Optional boolean, remove cookie in http header (default true because
-                                                    add a Cookie Manager)
- -remove_headers &lt;remove_headers&gt;                   Remove a list of headers (comma separator, case insensitive),
-                                                    e.g:User-Agent,Pragma,X-TOKEN
- -sampler_start_number &lt;sampler_start_number&gt;       Optional, the start sampler number for partial recording (default 1)
- -use_lrwr_infos &lt;use_lrwr_infos&gt;                   Optional, the har file has been generated with LoadRunner Web
-                                                    Recorder and contains Transaction Name, expected value :
-                                                    'transaction_name' or don't add this parameter
- -ws_with_pdoornbosch &lt;ws_with_pdoornbosch&gt;         Optional boolean, Manage websocket messages with the JMeter plugin
-                                                    from Peter DOORNBOSH (default false), if true need the plugin from
-                                                    Peter DOORNBOSH to open the generated script
+ -add_pause &lt;add_pause&gt;                                   Optional boolean, add Flow Control Action Pause after
+                                                          Transaction Controller (default true)
+ -add_result_tree_record &lt;add_result_tree_record&gt;         Optional boolean, add 'View Result Tree' to view the
+                                                          record.xml file created (default true), record_out must be not
+                                                          empty
+ -external_file_infos &lt;external_file_infos&gt;               Optional, csv file contains external infos : timestamp
+                                                          transaction name and start or end
+ -filter_exclude &lt;filter_exclude&gt;                         Optional, regular expression to exclude url
+ -filter_include &lt;filter_include&gt;                         Optional, regular expression to include url
+ -har_in &lt;har_in&gt;                                         Har file to read (e.g : my_file.har)
+ -help                                                    Help and show parameters
+ -jackson_parser_string_max &lt;jackson_parser_string_max&gt;   Optional argument to increase (or decrease) the maximum
+                                                          allowed document string for the Jackson Parser library (int
+                                                          value), default is 20000000
+ -jmx_out &lt;jmx_out&gt;                                       JMeter file created to write (e.g : script.jmx)
+ -new_tc_pause &lt;new_tc_pause&gt;                             Optional, create new Transaction Controller after request ms,
+                                                          same as jmeter property : proxy.pause, need to be &gt; 0 if set.
+                                                          Usefully for Har created by Firefox or Single Page Application
+                                                          (Angular, ReactJS, VuesJS ...)
+ -page_start_number &lt;page_start_number&gt;                   Optional, the start page number for partial recording (default
+                                                          1)
+ -record_out &lt;record_out&gt;                                 Optional, file xml contains exchanges likes recorded by JMeter
+ -remove_cache_request &lt;remove_cache_request&gt;             Optional boolean, remove cache header in the http request
+                                                          (default true because add a Cache Manager)
+ -remove_cookie &lt;remove_cookie&gt;                           Optional boolean, remove cookie in http header (default true
+                                                          because add a Cookie Manager)
+ -remove_headers &lt;remove_headers&gt;                         Remove a list of headers (comma separator, case insensitive),
+                                                          e.g:User-Agent,Pragma,X-TOKEN
+ -sampler_start_number &lt;sampler_start_number&gt;             Optional, the start sampler number for partial recording
+                                                          (default 1)
+ -ws_with_pdoornbosch &lt;ws_with_pdoornbosch&gt;               Optional boolean, Manage websocket messages with the JMeter
+                                                          plugin from Peter DOORNBOSH (default false), if true need the
+                                                          plugin from Peter DOORNBOSH to open the generated script
 E.g : java -jar har-for-jmeter-&lt;version&gt;-jar-with-dependencies.jar -har_in myhar.har -jmx_out scriptout.jmx -record_out
 recording.xml -add_result_tree_record true -new_tc_pause 5000 -add_pause true -filter_include "https://mysite/.*"
 -filter_exclude "https://notmysite/*" -page_start_number 50 -sampler_start_number 250 -ws_with_pdoornbosch false
@@ -239,13 +230,17 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>har-convertor-jmeter-plugin</artifactId>
-<version>8.0</version>
+<version>9.1</version>
 ```
 
 ## License
 Licensed under the Apache License, Version 2.0
 
 ## Versions
+Version 9.1 date 2026-02-04, Use new library har-to-jmeter-convertor 9.1 remove parameter use_lrwr_infos because the LoadRunner plugin HarGeneratorChrome for Chrome doesn't work with new Chrome security for plugins. Modify pom.xml to exclude jackson and commons-lang3 libraries. This plugin need Saxon-HE>=12.3 for better Performance.
+
+Version 9.0 date 2026-02-03, Use new library har-to-jmeter-convertor 9.0 add new parameter -jackson_parser_string_max to change default Jackson String length size (default integer size = 20000000).
+
 Version 8.0 date 2025-11-22, Use new library har-to-jmeter-convertor 8.0 add new parameter <code>-remove_headers</code> remove a list of http headers (comma separator, case insensitive), e.g: <code>-remove_headers "User-Agent,Pragma,X-TOKEN"</code>
 
 Version 7.1 date 2025-03-27, Use new library har-to-jmeter-convertor 7.1 remove request headers from HTTP/2, these headers start with ':' likes ":authority", ":method", ":path" or ":scheme" correct Issue #2. Don't create HttpSampler for url "data:".
