@@ -31,8 +31,8 @@ Parameters are :
 * record_out create the record xml file from the har file (could be open with the Listener View Results Tree) <br/>
   e.g. record_out = record.xml
 * add_result_tree_record, add a View Result Tree to view the Recording XML File Generated (default true), the record_out must be not empty
-* external_file_infos, external csv file contains information about Timestamp, Transaction Name, date start or end. <br/>
-    e.g. external_file_infos = myappli_transactions.csv
+* external_file_infos, external csv file or json file contains information about Timestamp, Transaction Name, start or end. <br/>
+    e.g. external_file_infos = myappli_transactions.csv or external_file_infos = txn-markers.json
 * new_tc_pause time between 2 urls to create a new page (Transaction Controller) (default 5000 = jmeter property value : proxy.pause=5000) <br/>
   * e.g. 5000 for 5 sec between 2 urls
 * page_start_number, set the start page number for partial recording (default 1, must be an integer > 0) <br/>
@@ -110,6 +110,20 @@ A simple tool named "create-external-file-for-har" create easily this csv file. 
 
 You need to select the csv file in the text field : "(Optional) External csv file with transaction info (to read) "
 
+### External JSON file created with "HAR Transaction Marker" from LOADMAGIC.AI
+You could add an external json file that contains information about transaction name start and end and timestamp.<br/>
+![Step to create script and record from HAR file and external json file](doc/images/browsers_har_transaction_marker_convertor_script_record.png)
+
+A Chrome plugin call "HAR Transaction Marker" from LOADMAGIC.AI, could generate an external JSON file with Transaction Names, timestamp (EPOC GMT ms), type start or stop<br/>
+![Use the "Har Transaction Marker Chrome Plugin to create Transaction Informations](doc/images/har_transaction_maker_loadmagic_ia.png)
+
+This extension at Chrome Web Store: https://chromewebstore.google.com/search/HAR%20Transaction%20Marker
+
+E.g: JSON content<br/>
+!["JSON file created  with Har Transaction Marker](doc/images/har_transaction_maker_loadmagic_ia_json.png) <br/>
+
+The JSON need at least an array of "name", "type" ("start" or "end") and timestamp format 'EPOC GMT ms' (e.g:1771835429492) and UTF-8 encoded.
+
 ### HAR created with BrowserUp Proxy
 This tool is compatible with Har file generated with BrowserUp Proxy.
 
@@ -133,7 +147,7 @@ Documentation at : https://bitbucket.org/pjtr/jmeter-websocket-samplers/src/mast
 
 The HAR is record from **Chrome** Browser not Firefox Browser and not Egde Browser (research in har file the attribute : '_webSocketMessages').
 
-Currently limitation to only one websocket connection and multi text messages (send or receive) in this websocket connection (binary message is not tested).
+Currently, limitation to only one websocket connection and multi text messages (send or receive) in this websocket connection (binary message is not tested).
 
 Text message could be on "STOMP" format (https://en.wikipedia.org/wiki/Streaming_Text_Oriented_Messaging_Protocol) or no "STOMP" (simple text).
 
@@ -177,7 +191,7 @@ io.github.vdaburon.jmeter.har.HarForJMeter
  -add_result_tree_record &lt;add_result_tree_record&gt;         Optional boolean, add 'View Result Tree' to view the
                                                           record.xml file created (default true), record_out must be not
                                                           empty
- -external_file_infos &lt;external_file_infos&gt;               Optional, csv file contains external infos : timestamp
+ -external_file_infos &lt;external_file_infos&gt;               Optional, csv file or json file contains external infos : timestamp
                                                           transaction name and start or end
  -filter_exclude &lt;filter_exclude&gt;                         Optional, regular expression to exclude url
  -filter_include &lt;filter_include&gt;                         Optional, regular expression to include url
@@ -230,13 +244,15 @@ The maven groupId, artifactId and version, this plugin is in the **Maven Central
 ```xml
 <groupId>io.github.vdaburon</groupId>
 <artifactId>har-convertor-jmeter-plugin</artifactId>
-<version>9.1</version>
+<version>10.0</version>
 ```
 
 ## License
 Licensed under the Apache License, Version 2.0
 
 ## Versions
+Version 10.0 date 2026-02-24, Use new library har-to-jmeter-convertor 10.0, external file could be a JSON file created with "HAR Transaction Marker" Chrome Plugin from LOADMAGIC.AI or a CSV file.
+
 Version 9.1 date 2026-02-04, Use new library har-to-jmeter-convertor 9.1 remove parameter use_lrwr_infos because the LoadRunner plugin HarGeneratorChrome for Chrome doesn't work with new Chrome security for plugins. Modify pom.xml to exclude jackson and commons-lang3 libraries. This plugin need Saxon-HE>=12.3 for better Performance.
 
 Version 9.0 date 2026-02-03, Use new library har-to-jmeter-convertor 9.0 add new parameter -jackson_parser_string_max to change default Jackson String length size (default integer size = 20000000).

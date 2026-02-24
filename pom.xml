@@ -6,7 +6,7 @@
 
     <groupId>io.github.vdaburon</groupId>
     <artifactId>har-convertor-jmeter-plugin</artifactId>
-    <version>9.1</version>
+    <version>10.0</version>
     <packaging>jar</packaging>
 
     <name>Apache JMeter Plugin to convert a HAR file to a JMeter script and Record XML</name>
@@ -94,7 +94,7 @@
         <dependency>
             <groupId>io.github.vdaburon</groupId>
             <artifactId>har-to-jmeter-convertor</artifactId>
-            <version>9.1</version>
+            <version>10.0</version>
             <exclusions>
                 <!-- Use same version of jackson as available with JMeter 5.6.3 -->
                 <exclusion>

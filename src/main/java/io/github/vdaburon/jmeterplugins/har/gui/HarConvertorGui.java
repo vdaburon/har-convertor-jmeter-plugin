@@ -340,7 +340,7 @@ public class HarConvertorGui extends AbstractAction implements
 
         if (command.equals(BROWSE_EXTERNAL_FILE_IN)) {
             externalFileInfoInField.setText(showFileChooser(externalFileInfoInField.getParent(),
-                    externalFileInfoInField, false, new String[] { ".csv" }));
+                    externalFileInfoInField, false, new String[] { ".csv",".json" }));
             labelStatus.setText("Waiting configuration ... ");
             labelStatus.setForeground(java.awt.Color.BLACK);
         }
@@ -501,7 +501,7 @@ public class HarConvertorGui extends AbstractAction implements
         fileRecordOutFileButton.addActionListener(this);
         fileChooserPanel.add(fileRecordOutFileButton);
 
-        fileChooserPanel.add(new JLabel("(Optional) External csv file with transaction info (to read) : "));
+        fileChooserPanel.add(new JLabel("(Optional) External csv file or json file with transaction info (to read) : "));
         externalFileInfoInField= new JTextField();
         fileChooserPanel.add(externalFileInfoInField);
 
